@@ -1,6 +1,6 @@
 import Export
 
-projects = ["You List Projects"] 
+projects = ["You Lits Projects"]
 directory = "/home/thiago/Documents/Sonar/"
 
 expo = Export.Export()

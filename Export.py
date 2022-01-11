@@ -2,9 +2,8 @@ from sonarqube import SonarEnterpriseClient
 
 from sonarqube.community.project_badges import SonarQubeProjectBadges
 
-import os
-from datetime import datetime
 import csv
+from datetime import datetime
 
 class Export:
 
@@ -12,11 +11,14 @@ class Export:
 
         sonar = SonarEnterpriseClient(sonarqube_url="http://localhost:9000", token='You Token')
         
-        with open(directory + 'relatorio.csv', 'a+',) as csvfile:
-            fields = ['Ord','Project', 'Blocker','Critical','Major','Issues']
+        today = datetime.today()
+        date = str(today.now())
+
+        with open(directory + 'relatorio-'+ date +'.csv', 'a+',) as csvfile:
+            fields = ['Ord', 'Project Name', 'Project', '-', 'Blocker','Critical', '--', '---', 'Major', '----','Issues', 'Coverage']
             writer = csv.DictWriter(csvfile, fieldnames=fields, dialect='excel')
             writer.writeheader()
-            ordem = 0
+            ordem = 1
             blockers = 0
             criticals = 0
             majors = 0
@@ -26,12 +28,23 @@ class Export:
                 try:
                     print('Gerando relatório do pacote '+str(project))
 
-                    blocker = list(sonar.issues.search_issues(componentKeys=project, severities="BLOCKER")).__len__()
-                    critical = list(sonar.issues.search_issues(componentKeys=project, severities="CRITICAL")).__len__()
-                    major = list(sonar.issues.search_issues(componentKeys=project, severities="MAJOR")).__len__()
-                    issues = list(sonar.issues.search_issues(componentKeys=project)).__len__()
+                    blocker = list(sonar.issues.search_issues(componentKeys=project, severities="BLOCKER", statuses="OPEN")).__len__()
+                    blocker = blocker + list(sonar.issues.search_issues(componentKeys=project, severities="BLOCKER", statuses="REOPENED")).__len__()
                     
-                    writer.writerow({'Ord': ordem, 'Project': project, 'Blocker': blocker, 'Critical': critical,'Major': major, 'Issues': issues})
+                    critical = list(sonar.issues.search_issues(componentKeys=project, severities="CRITICAL", statuses="OPEN")).__len__()
+                    critical = critical + list(sonar.issues.search_issues(componentKeys=project, severities="CRITICAL", statuses="REOPENED")).__len__()
+                    
+                    major = list(sonar.issues.search_issues(componentKeys=project, severities="MAJOR", statuses="OPEN")).__len__()
+                    major = major + list(sonar.issues.search_issues(componentKeys=project, severities="MAJOR", statuses="REOPENED")).__len__()
+                    
+                    issues = list(sonar.issues.search_issues(componentKeys=project, statuses="OPEN")).__len__()
+                    issues = issues + list(sonar.issues.search_issues(componentKeys=project, statuses="REOPENED")).__len__()
+        
+                    result = list(sonar.measures.search_measures_history(component=project, metrics="coverage"))
+                    coverage = str(result[0])
+                    coverage = coverage[-11:-3]
+
+                    writer.writerow({'Ord': ordem, 'Project Name': project, 'Project': project, '-': date, 'Blocker': blocker, 'Critical': critical, '--': '', '---':'', 'Major': major, '----':'', 'Issues': issues, 'Coverage': coverage})
 
                     ordem = ordem + 1
                     blockers = blockers + blocker
@@ -42,7 +55,7 @@ class Export:
                 except:
                     print("Erro ao gerar relatorio do projeto "+str(project))
             
-            writer.writerow({'Ord': "", 'Project': "Resume", 'Blocker': blockers, 'Critical': criticals,'Major': majors, 'Issues': issuess})
+            writer.writerow({'Ord': "", 'Project Name': "", 'Project': "Resume", '-': "", 'Blocker': blockers, 'Critical': criticals, '--': "", '---': "", 'Major': majors, '----': "", 'Issues': issuess})
         print("Relatório finalizado.")
 
         return "Sucess!"
