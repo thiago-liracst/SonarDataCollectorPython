@@ -1,9 +1,8 @@
 import Export
 
-class Main():
+class Main():  
 
-    projects = ["You List Projects"]
-    directory = "You directory. Example: /home/thiago/Documents/Sonar/"
+    projects = ["My Çist Projects"]
 
     status = 's'
     while(status == 's'):
@@ -11,11 +10,10 @@ class Main():
         print('1- Gerar relatório de Array pré definido?\n')
         print('2- Gerar relatório de um projeto específico?\n')
         value = int(input())
-        
+        directory = "/home/thiago/Documents/Sonar/"
         if value == 1:
             print('Usar diretório padrão (/home/thiago/Documents/Sonar/)? (y)\n')
             p = str(input().lower())
-            directory = "/home/thiago/Documents/Sonar/"
             if p.__eq__('y'):
                 expo = Export.Export()
                 expo.export_branches_pdf(projects, directory)

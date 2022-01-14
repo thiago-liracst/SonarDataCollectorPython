@@ -43,6 +43,23 @@ class Export:
                     result = list(sonar.measures.search_measures_history(component=project, metrics="coverage"))
                     coverage = str(result[0])
                     coverage = coverage[-11:-3]
+                    
+                    
+                    ocorrencia = 0
+                    valor = ""
+                    # "98 '95.6%' }]}"
+                    for letra in coverage:
+                        if ocorrencia==0:  
+                            
+                            if letra.__eq__("'"):
+                                ocorrencia=1
+                        else:
+                            if letra.__eq__("'"):
+                                ocorrencia = 0
+                            else:
+                                valor = valor + letra
+
+                    coverage = valor                         
 
                     writer.writerow({'Ord': ordem, 'Project Name': project, 'Project': project, '-': date, 'Blocker': blocker, 'Critical': critical, '--': '', '---':'', 'Major': major, '----':'', 'Issues': issues, 'Coverage': coverage})
 
