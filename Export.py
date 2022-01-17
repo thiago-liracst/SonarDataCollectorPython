@@ -42,12 +42,12 @@ class Export:
         
                     result = list(sonar.measures.search_measures_history(component=project, metrics="coverage"))
                     coverage = str(result[0])
-                    coverage = coverage[-11:-3]
+                    coverage = coverage[-10:-3]
                     
                     
                     ocorrencia = 0
                     valor = ""
-                    # "98 '95.6%' }]}"
+
                     for letra in coverage:
                         if ocorrencia==0:  
                             

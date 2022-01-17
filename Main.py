@@ -2,7 +2,7 @@ import Export
 
 class Main():  
 
-    projects = ["My Çist Projects"]
+    project = ["You Projects - List"]
 
     status = 's'
     while(status == 's'):
