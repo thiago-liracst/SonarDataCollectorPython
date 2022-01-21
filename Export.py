@@ -10,6 +10,8 @@ class Export:
     def export_branches_pdf(self, projects, directory):
 
         sonar = SonarEnterpriseClient(sonarqube_url="http://localhost:9000", token='You Token')
+        #Autenticação com usuário e senha
+        #sonar = SonarQubeClient(sonarqube_url="http://localhost:9000", username='You user', password='You password')
         
         today = datetime.today()
         date = str(today.now())
