@@ -1,4 +1,5 @@
 from sonarqube import SonarEnterpriseClient
+from sonarqube import SonarQubeClient
 
 from sonarqube.community.project_badges import SonarQubeProjectBadges
 
@@ -9,14 +10,15 @@ class Export:
 
     def export_branches_pdf(self, projects, directory):
 
-        sonar = SonarEnterpriseClient(sonarqube_url="http://localhost:9000", token='You Token')
+        #sonar = SonarEnterpriseClient(sonarqube_url="http://localhost:9000", token='You Token')
         #Autenticação com usuário e senha
-        #sonar = SonarQubeClient(sonarqube_url="http://localhost:9000", username='You user', password='You password')
+        sonar = SonarQubeClient(sonarqube_url="http://localhost:9000", username='user', password='pass')
         
         today = datetime.today()
-        date = str(today.now())
 
-        with open(directory + 'relatorio-'+ date +'.csv', 'a+',) as csvfile:
+        date = '{}-{}-{}'.format(today.day, today.month, today.year)
+
+        with open(directory + 'Relatorio-Sonar-'+ date +'.csv', 'a+',) as csvfile:
             fields = ['Ord', 'Project Name', 'Project', '-', 'Blocker','Critical', '--', '---', 'Major', '----','Issues', 'Coverage']
             writer = csv.DictWriter(csvfile, fieldnames=fields, dialect='excel')
             writer.writeheader()

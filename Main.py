@@ -2,7 +2,7 @@ import Export
 
 class Main():  
 
-    project = ["You Projects - List"]
+    projects = ["You Projects"]
 
     status = 's'
     while(status == 's'):
@@ -10,9 +10,9 @@ class Main():
         print('1- Gerar relatório de Array pré definido?\n')
         print('2- Gerar relatório de um projeto específico?\n')
         value = int(input())
-        directory = "/home/thiago/Documents/Sonar/"
+        directory = "C:/Users/you.user/Documents/RelatoriosSonar/"
         if value == 1:
-            print('Usar diretório padrão (/home/thiago/Documents/Sonar/)? (y)\n')
+            print('Usar diretório padrão (C:/Users/you.user/Documents/RelatoriosSonar/)? (y)\n')
             p = str(input().lower())
             if p.__eq__('y'):
                 expo = Export.Export()
