@@ -6,11 +6,15 @@ from sonarqube.community.project_badges import SonarQubeProjectBadges
 import csv
 from datetime import datetime
 
+import json
+
 class Export:
 
     def export_branches_pdf(self, projects, directory):
 
-        #sonar = SonarEnterpriseClient(sonarqube_url="http://localhost:9000", token='You Token')
+        jsonFinal = {}
+
+        #sonar = SonarEnterpriseClient(sonarqube_url="http://localhost:9000", token='You Token Sonar')
         #Autenticação com usuário e senha
         sonar = SonarQubeClient(sonarqube_url="http://localhost:9000", username='user', password='pass')
         
@@ -72,11 +76,25 @@ class Export:
                     criticals = criticals + critical
                     majors = majors + major
                     issuess = issuess + issues
+
+                    pjt = {
+                        "blockers": blockers,
+                        "criticals": criticals,
+                        "majors": majors,
+                        "issues": issuess,
+                        "coverage": coverage
+                    }
+
+                    jsonFinal[project] = pjt
                     
                 except:
                     print("Erro ao gerar relatorio do projeto "+str(project))
             
             writer.writerow({'Ord': "", 'Project Name': "", 'Project': "Resume", '-': "", 'Blocker': blockers, 'Critical': criticals, '--': "", '---': "", 'Major': majors, '----': "", 'Issues': issuess})
         print("Relatório finalizado.")
+
+        print("Exportando JSON")
+        with open(directory + 'json_data.json', 'w') as outfile:
+            json.dump(jsonFinal, outfile)
 
         return "Sucess!"
